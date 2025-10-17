@@ -1,0 +1,21 @@
+# prometheus/alert.rules.yml
+groups:
+  - name: AppAlerts
+    rules:
+      - alert: HighErrorRate
+        expr: rate(http_errors_total{job="demo-app"}[3m]) > 0.1
+        for: 1s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Taxa de erros alta na aplicação"
+          description: "A aplicação no endpoint {{ $labels.endpoint }} está com uma taxa de erros acima do normal."
+
+      - alert: HighRequestLatency
+        expr: http_request_latency_seconds_bucket{le="2.5", job="demo-app"} / http_request_latency_seconds_count{job="demo-app"} < 0.8
+        for: 5s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latência alta detectada"
+          description: "Mais de 20% das requisições no endpoint {{ $labels.endpoint }} estão demorando mais de 2.5 segundos."

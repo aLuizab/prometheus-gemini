@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+  app:
+    build: ./app
+    ports:
+      - "5000:5000"
+    restart: always
+
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    restart: always
+
+  alertmanager:
+    image: prom/alertmanager:v0.25.0
+    volumes:
+      - ./alertmanager/config.yml:/etc/alertmanager/config.yml
+    ports:
+      - "9093:9093"
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+    restart: always
+
+  gen-ai-bridge:
+    build: ./gen-ai-bridge
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./gcp-credentials.json:/gcp-credentials.json
+    environment:
+      # Lembre-se de criar um arquivo .env ou exportar estas variáveis
+      - GOOGLE_APPLICATION_CREDENTIALS=/gcp-credentials.json
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+      - GCP_PROJECT_ID=${GCP_PROJECT_ID}
+      - GCP_REGION=${GCP_REGION}
+    restart: always
