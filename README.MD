@@ -2,11 +2,11 @@
 
 Este é o projeto de demonstração para a palestra **"Do Prometheus ao GPT: Uma Nova Era de Observabilidade Inteligente"**, apresentada na Cloud Native Day São Paulo.
 
-O objetivo deste projeto é demonstrar como a Inteligência Artificial Generativa pode ser integrada a uma stack de observabilidade tradicional (Prometheus + Alertmanager) para transformar alertas técnicos e crípticos em análises ricas, contextualizadas e acionáveis, enviadas diretamente para o Slack.
+O objetivo deste projeto é demonstrar como a Inteligência Artificial Generativa pode ser integrada a uma stack de observabilidade tradicional (Prometheus + Alertmanager) para transformar alertas técnicos e críticos em análises ricas, contextualizadas e acionáveis, enviadas diretamente para o Slack.
 
 ## Arquitetura
 
-O fluxo da aplicação é simples e poderoso:
+O fluxo da aplicação é simples:
 
 ```
 +-------------------+      +-----------------+      +------------------+
@@ -67,7 +67,7 @@ Esta é a etapa mais crítica. A autenticação com a API do Google Cloud requer
 5.  **Gere uma Chave JSON:**
       - Após criar a conta de serviço, entre nela, vá na aba `CHAVES`.
       - Adicione uma nova chave do tipo **JSON**.
-      - Um arquivo `.json` será baixado. **Renomeie este arquivo para `gcp-credentials.json`** e coloque-o na raiz deste projeto.
+      - Um arquivo `.json` será baixado. **Renomeie este arquivo para `gcp-credentials.json`** e coloque-o na raiz deste projeto. Um modelo do arquivo está disponvel no projeto.
       - **Segurança:** Adicione `gcp-credentials.json` ao seu arquivo `.gitignore` para nunca cometer este segredo no repositório.
 
 ### 2\. Slack
@@ -119,6 +119,11 @@ Para gerar os alertas, execute os seguintes comandos em um novo terminal.
 # Gera 50 requests que resultarão em erro HTTP 500
 hey -n 50 -c 10 http://localhost:5000/error
 ```
+ou 
+
+```bash
+for i in {1..50}; do curl -s -o /dev/null http://localhost:5000/error & done   
+```
 
 **Para gerar um alerta de alta latência:**
 
@@ -137,7 +142,7 @@ Durante o desenvolvimento, encontramos alguns erros comuns. Se algo der errado, 
   - **Erro `404 model not found`:**
       - Verifique se o **faturamento** e as **APIs** (`Vertex AI` e `Generative Language`) estão ativos no seu projeto GCP.
       - Confirme se a **região** (`GCP_REGION`) no seu `.env` está correta.
-      - **Crucial:** Verifique o nome do modelo no `gen-ai-bridge/bridge.py`. Descobrimos que o nome completo e versionado (`gemini-1.5-pro`) foi o que funcionou para o nosso projeto.
+      - **Crucial:** Verifique o nome do modelo no `gen-ai-bridge/bridge.py`. Descobrimos que o nome completo e versionado (`gemini-2.5-pro`) foi o que funcionou para o nosso projeto.
   - **Erro `401 Unauthorized` ou `CREDENTIALS_MISSING`:** Este erro indica que a autenticação via Chave de API não é aceita. A solução é usar uma **Service Account** com o arquivo JSON, conforme descrito no guia de configuração.
   - **Erro `403 SERVICE_DISABLED`:** Confirma que uma API específica (`Vertex AI` ou `Generative Language`) não está ativa no seu projeto. Use o link no erro para ativá-la.
 
