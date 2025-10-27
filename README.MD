@@ -2,6 +2,8 @@
 
 Este é o projeto de demonstração para a palestra **"Do Prometheus ao GPT: Uma Nova Era de Observabilidade Inteligente"**, apresentada na Cloud Native Day São Paulo.
 
+Apresentação disponível em: https://docs.google.com/presentation/d/1WxjzGd6KQzrsPJQqrJYAHd-pw7p8QMW4AosDZvu-fxs/edit?usp=sharing
+
 O objetivo deste projeto é demonstrar como a Inteligência Artificial Generativa pode ser integrada a uma stack de observabilidade tradicional (Prometheus + Alertmanager) para transformar alertas técnicos e críticos em análises ricas, contextualizadas e acionáveis, enviadas diretamente para o Slack.
 
 ## Arquitetura
